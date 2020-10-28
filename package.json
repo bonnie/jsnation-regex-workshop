@@ -1,0 +1,14 @@
+{
+  "name": "private-udemy-js-regex-syntax",
+  "version": "1.0.0",
+  "description": "",
+  "main": "js_specific.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
