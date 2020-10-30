@@ -1,56 +1,45 @@
 const fs = require('fs');
+const assert = require('assert');
 
-// LECTURE EXAMPLE 1: Regular expression literal that matches the first word
-// starting with s
-const sWordRegex = /\bs\w+\b/;
+// for assertions
+let actual, expected, regex, match, matches;
 
-// LECTURE EXAMPLE 2: Regular expression literal that captures the
-// root filename and extension for files that have certain image extensions
+// common string for matching
+const tongueTwister = 'She sells seashells by the seashore';
+
+/********************************************************************************/
+// LECTURE EXAMPLE 1: Regular expression literal 
+// Match the first word starting with s
+const sWordRegexNoFlags = /\bs\w+\b/;
+
+/********************************************************************************/
+// LECTURE EXAMPLE 2: Regular expression literal with groups ****************
+// capture the root filename and extension for files that have certain image extensions
 const filenameRegex = /^(.+)\.(pdf|jpe?g|png)$/gim;
 
-// LECTURE EXAMPLE 3: Create RegExp from variable
+/********************************************************************************/
+// LECTURE EXAMPLE 3: Create RegExp from variable 
 // Create RegExp to capture root filename and extension for files with certain extensions
-/**
- * @function findFilesWithImageExtensions
- * Return a regex for files with extensions are specified in input file.
- *
- * Regular expression should have two capturing groups: one for the filename before the
- * final dot, and one for the extension after the dot.
- *
- * Assumes extensionsFilePath is a text file with extensions separated by \n characters.
- *
- * Assumes string of filenames matched against returned regex will have one filenames
- * separated by \n characters.
- *
- * In reality, it's more likely that your function will match a string against the regex
- * rather than just returning the regex, but we haven't gotten to string/regex matching
- * yet in this course! ;-)
- *
- * @param {string} extensionsFilePath
- *
- * @example
- *
- *   findFilesWithImageExtensions('files/extensions.txt')
- *   // => /(.*)\.(gif|jpg|jpeg|png|pdf)$/gm
- *
- * @returns {RegExp} Regular expression object representing filenames with specified extensions
- */
-const findFilesWithImageExtensions = function (extensionsFilePath) {
-  // extensions will be an array of strings
-  const extensions = fs.readFileSync(extensionsFilePath, 'ascii').split('\n');
 
-  // filter out any empty strings
-  const filteredExtensions = extensions.filter((ext) => ext !== '');
+// extensions will be an array of strings, assuming file has one extension per line
+const extensions = fs.readFileSync('files/extensions.txt', 'ascii').split('\n');
 
-  // join the strings with '|' for regular expression "or"
-  const regexExtensions = filteredExtensions.join('|');
+// filter out any empty strings
+const filteredExtensions = extensions.filter((ext) => ext !== '');
 
-  // Return RegExp. Must escape \ in RegExp argument (hence \\. instead of \.)
-  // Second argument is flags
-  return RegExp(`(.*)\\.(${regexExtensions})$`, 'gm');
-};
+// join the strings with '|' for regular expression "or"
+const regexExtensions = filteredExtensions.join('|');
 
-// LECTURE EXAMPLE 4: RegExp properties
+// Must escape \ in RegExp argument (hence \\. instead of \.)
+// Second argument is flags
+const regexFromVariable = RegExp(`(.*)\\.(${regexExtensions})$`, 'gm');
+
+/******** TESTS ********/
+expected = /(.*)\.(gif|jpg|jpeg|png|pdf)$/gm;
+assert.deepStrictEqual(regexFromVariable, expected);
+
+/********************************************************************************/
+// LECTURE EXAMPLE 4: RegExp properties 
 // Add the 'g' flag to an existing regular expression is it's not already there
 
 /**
@@ -58,17 +47,6 @@ const findFilesWithImageExtensions = function (extensionsFilePath) {
  * Add the 'g' flag to an existing regular expression is it's not already there
  * 
  * @param {RegExp} regularExpression 
- * 
- * @example
- * 
- *   addGlobalToRegex(/\b\w+b\b/);
- *   // => /\b\w+b\b/g
- * 
- *   addGlobalToRegex(/a+/g);
- *   // => /a+/g
- * 
- *   addGlobalToRegex(/[A-Z]/i);
- *   // => /[A-Z]/gi
  * 
  * @returns {RegExp} The input regular expression, including the global flag
  * 
@@ -81,121 +59,65 @@ const addGlobalToRegex = function(regularExpression) {
   return RegExp(regularExpression.source, regularExpression.flags + 'g')
 }
 
-// LECTURE EXAMPLE JS1: RegExp.prototype.test
-// Find strings that have any word that start wtih s or S
-/**
- * @function matchStringsWithSWord
- * Return true if input string contains any word that starts with s or S.
- *
- * @param {string} string Input string to be tested
- *
- * @example
- *
- *   matchStringsWithSWord('She sells seashells by the seashore.');
- *   // => true
- *
- *   matchStringsWithSWord('I do not like cute animals.');
- *   // => false
- *
- * @returns {boolean} true if string contains an s-word, false otherwise.
- */
-const matchStringsWithSWord = function (string) {
-  const sWordRegex = /\bs\w+\b/i;
-  return sWordRegex.test(string);
-};
+/******** TESTS ********/
+actual = addGlobalToRegex(/\b\w+b\b/);
+expected = /\b\w+b\b/g
+assert.deepStrictEqual(actual, expected);
 
-// LECTURE EXAMPLE JS2: RegExp.prototype.exec
+actual = addGlobalToRegex(/a+/g);
+expected = /a+/g
+assert.deepStrictEqual(actual, expected);
+
+actual = addGlobalToRegex(/[A-Z]/i);
+expected = /[A-Z]/gi
+assert.deepStrictEqual(actual, expected);
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE 5: RegExp.prototype.test 
+// Match strings that have any word that start wtih s or S
+regex = /\bs\w+\b/i;
+
+/******** TESTS ********/
+match = regex.test('She sells seashells by the seashore.');
+assert.strictEqual(match, true);
+
+match = regex.test('I do not like cute animals.');
+assert.strictEqual(match, false);
+
+/********************************************************************************/
+// LECTURE EXAMPLE 6: RegExp.prototype.exec 
 // Find the first word that starts with s or S
-/**
- * @function findFirstSWord
- * Return the first word that starts with s or S.
- *
- * If no word starts with s or S in input string, return null.
- *
- * @example
- *
- *   findFirstSWord('She sells seashells by the seashore')
- *   // => 'She'
- *
- *   findFirstSWord('No words begin with that letter.')
- *   // => null
- *
- * @param {string} string Input string to be matched against
- *
- * @returns {string}  the first match, or null if no match
- */
-const findFirstSWord = function (string) {
-  const sWordRegex = /\bs\w+\b/i;
-  const match = sWordRegex.exec(string);
-  // example match: [ 'She', index: 0, input: 'She sells seashells', groups: undefined ]
-  // match will be null if no matches found
-  return match ? match[0] : null;
-};
+regex = /\bs\w+\b/i;
 
-// LECTURE EXAMPLE JS3: RegExp.prototype.exec with multiple matches
-// Find array of words that start with s or S
-/**
- * @function findAllSWords
- * Return array of words that start with s or S in the input string
- *
- * If no word starts with s or S in input string, return empty array.
- *
- * @example
- *
- *   findAllSWords('She sells seashells by the seashore')
- *   // => [ 'She', 'sells', 'seashells', 'seashore' ]
- *
- *   findAllSWords('No words begin with that letter.')
- *   // => []
- *
- * @param {string} string Input string to be matched against
- *
- * @returns {array}  array of matched words
- */
-const findAllSWords = function (string) {
-  const sWordRegex = /\bs\w+\b/gi;
-  let match;
-  const matches = [];
+/******** TESTS ********/
+match = regex.exec('She sells seashells by the seashore.');
+assert.deepStrictEqual(match[0], 'She');
 
-  // match[0] is the actual match; the rest of the match obj is metadata
-  while ((match = sWordRegex.exec(string))) matches.push(match[0]);
+match = regex.exec('No words with that letter here');
+assert.strictEqual(match, null);
 
-  return matches;
-};
+/********************************************************************************/
+// LECTURE EXAMPLE 7: RegExp.prototype.exec with multiple matches 
+// Find all words that start with s or S
+// g is important so while loop won’t hang!
+regex = /\bs\w+\b/gi;  
 
-// LECTURE EXAMPLE JS4: RegExp.protoype.exec with groups
+/******** TESTS ********/
+matches = [ ];  // clear matches from previous tests
+while (match = regex.exec('She sells seashells by the seashore'))
+  matches.push(match[0]);
+assert.deepStrictEqual(matches, [ 'She', 'sells', 'seashells', 'seashore' ]);
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE 8: RegExp.protoype.exec with groups 
 // Find filename and extension for some image files
-/**
- * @function findFilenameAndExtension
- * Return array of [filename, extension] arrays for filenames with these extensions:
- *  pdf
- *  jpeg
- *  jpg
- *  png
- *
- * @param {string} files Filenames from which to extract part before extension
- *                       Each filename must be on its own line.
- *
- * @example
- *   findFilenameAndExtension('kittens.jpeg\npuppies.pdf\nsquid.txt\nfoals.png')
- *   // => [['kittens', 'jpeg'], ['puppies', 'pdf'], ['foals', 'png']]
- *
- *   findFilenameAndExtension('STRAWBERRY_PIE_RECIPE.PDF')
- *   // => [['STRAWBERRY_PIE_RECIPE', 'PDF']]
- *
- *   findFilenameAndExtension('file.notapdf')
- *   // => []
- *
- *   findFilenameAndExtension('kittens.txt')
- *   // => []
- *
- * @returns {array} Array of arrays, of the format [filename, extension]
- */
-const findFilenameAndExtension = function (files) {
-  const filenameRegex = /^(.+)\.(pdf|jpe?g|png)$/gim;
-  let match;
-  const matches = [];
-  while ((match = filenameRegex.exec(files)))
+regex = /^(.+)\.(pdf|jpe?g|png)$/gim;
+
+/******** TESTS ********/
+  matches = [ ];  // clear matches from previous tests
+  while ((match = filenameRegex.exec('kittens.jpeg\npuppies.png')))
     matches.push([match[1], match[2]]);
   // example match: [
   //   'kittens.jpeg',
@@ -205,63 +127,57 @@ const findFilenameAndExtension = function (files) {
   //   input: 'kittens.jpeg\npuppies.pdf\nsquid.txt\nfoals.png',
   //   groups: undefined
   // ]
-  return matches;
-};
 
-// LECTURE EXAMPLE JS5: String.prototype.match
+  // 
+  assert.deepStrictEqual(matches, [ [ 'kittens', 'jpeg' ], [ 'puppies', 'png' ] ])
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE 9: String.prototype.match 
 // Find the first word that starts with s or S
-/**
- * @function findFirstSWordStringMatch
- * Return the first word that starts with s or S.
- *
- * If no word starts with s or S in input string, return null.
- *
- * @example
- *
- *   findFirstSWordStringMatch('She sells seashells by the seashore')
- *   // => 'She'
- *
- *   findFirstSWordStringMatch('No words begin with that letter.')
- *   // => null
- *
- * @param {string} string Input string to be matched against
- *
- * @returns {string}  the first match, or null if no match
- */
-const findFirstSWordStringMatch = function (string) {
-  const sWordRegex = /\bs\w+\b/i;
-  const match = string.match(sWordRegex);
-  // example match: [ 'She', index: 0, input: 'She sells seashells', groups: undefined ]
-  // match will be null if no matches found
-  return match ? match[0] : null;
-};
+regex = /\bs\w+\b/i;
 
-// LECTURE EXAMPLE JS6: String.prototype.match with multiple matches
+/******** TESTS ********/
+match = ('She sells seashells by the seashore').match(regex);
+assert.strictEqual(match[0], 'She');
+
+match = ('No words begin with that letter.').match(regex);
+assert.strictEqual(match, null);
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE 10: String.prototype.match with multiple matches 
 // Find array of words that start with s or S
-/**
- * @function findAllSWordsStringMatch
- * Return array of words that start with s or S in the input string
- *
- * If no word starts with s or S in input string, return empty array.
- *
- * @example
- *
- *   findAllSWordsStringMatch('She sells seashells by the seashore')
- *   // => [ 'She', 'sells', 'seashells', 'seashore' ]
- *
- *   findAllSWordsStringMatch('No words begin with that letter.')
- *   // => null
- *
- * @param {string} string Input string to be matched against
- *
- * @returns {array}  array of matched words
- */
-const findAllSWordsStringMatch = function (string) {
-  const sWordRegex = /\bs\w+\b/gi;
-  return string.match(sWordRegex);
-};
+regex = /\bs\w+\b/gi;
 
-// LECTURE EXAMPLE JS7: String.prototype.match counting matches
+/******** TESTS ********/
+match = ('She sells seashells by the seashore').match(regex);
+assert.deepStrictEqual(match, [ 'She', 'sells', 'seashells', 'seashore' ]);
+
+match = ('No words begin with that letter').match(regex);
+assert.strictEqual(match, null);
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE XXXXXXX: Greedy quantifier vs. Lazy quantifier 
+// Find all HTML tags
+
+const findTagsGreedy = /<.+>/g;
+const findTagsLazy = /<.+?>/g;
+const nestedTags = '<p>I <b>love</b> regex</p>';
+
+/******** TESTS ********/
+actual = nestedTags.match(findTagsGreedy);
+expected = [ '<p>I <b>love</b> regex</p>' ];
+assert.deepStrictEqual(actual, expected);
+
+actual = nestedTags.match(findTagsLazy);
+expected = [ '<p>', '<b>', '</b>', '</p>' ];
+assert.deepStrictEqual(actual, expected);
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS7: String.prototype.match counting matches 
 // Find number of words that start with s or S
 /**
  * @function countSWordsStringMatch
@@ -285,7 +201,11 @@ const countSWordsStringMatch = function (string) {
   return match ? match.length : 0;
 };
 
-// LECTURE EXAMPLE JS8: String.protoype.matchAll with groups
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS8: String.protoype.matchAll with groups 
 // Find filename and extension for some image files
 // NOTE: string.prototype.matchAll supported in Node 12.0.0+
 /**
@@ -307,10 +227,10 @@ const countSWordsStringMatch = function (string) {
  *   // => [['STRAWBERRY_PIE_RECIPE', 'PDF']]
  *
  *   findFilenameAndExtensionStringMatchAll('file.notapdf')
- *   // => []
+ *   // => [ ]
  *
  *   findFilenameAndExtensionStringMatchAll('kittens.txt')
- *   // => []
+ *   // => [ ]
  *
  * @returns {array} Array of arrays, of the format [filename, extension]
  */
@@ -328,7 +248,11 @@ const findFilenameAndExtensionStringMatchAll = function (files) {
   // ]
 };
 
-// LECTURE EXAMPLE JS9: string.prototype.search
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS9: string.prototype.search 
 // Find index of first substring word that start wtih s or S
 /**
  * @function findFirstSWordIndex
@@ -351,7 +275,11 @@ const findFirstSWordIndex = function (string) {
   return string.search(sWordRegex);
 };
 
-// LECTURE EXAMPLE JS10: String.prototype.split
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS10: String.prototype.split 
 // Split on one or more whitespace characters
 /**
  * @function splitOnWhitespace
@@ -373,7 +301,11 @@ const splitOnWhitespace = function (string) {
   return string.split(/\s+/);
 };
 
-// LECTURE EXAMPLE JS11: String.prototype.replace
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS11: String.prototype.replace 
 // Replace all words starting with s with the string "s-word"
 // NOTE: string.prototype.replace supported in Node 12.0.0+
 /**
@@ -395,7 +327,11 @@ const replaceSWords = function (string) {
   return string.replace(/\bs\w+\b/gi, 's-word');
 };
 
-// LECTURE EXAMPLE JS12: String.prototype.replace referencing group within replacement
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS12: String.prototype.replace referencing group within replacement 
 // Replace words starting with s or S with s-word or S-word respectively
 // NOTE: string.prototype.replace supported in Node 12.0.0+
 /**
@@ -420,7 +356,11 @@ const replaceSWordsMatchingCase = function (string) {
   );
 };
 
-// LECTURE EXAMPLE JS12: String.prototype.replace with function
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS12: String.prototype.replace with function 
 // Replace first word with first letter capitalized, the rest lowercase
 // NOTE: string.prototype.replace supported in Node 12.0.0+
 /**
@@ -444,7 +384,11 @@ const capitalizeWords = function (string) {
   });
 };
 
-// LECTURE EXAMPLE JS14: String.prototpye.match referencing group within regex
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS14: String.prototpye.match referencing group within regex 
 // Find words that start and end with the same letter, case insensitive
 /**
  * @function
@@ -476,7 +420,11 @@ const findWordsThatBeginAndEndWithSameLetter = function (string) {
   return string.match(sameLetterStartEndRegex);
 };
 
-// LECTURE EXAMPLE JS15: named groups
+/******** TESTS ********/
+
+
+/********************************************************************************/
+// LECTURE EXAMPLE JS15: named groups 
 // Extract many partial matches with a name for each partial match
 /**
  * 
@@ -514,20 +462,3 @@ const parseLogLines = function (logString) {
   return matches.map((match) => match.groups);
 };
 
-module.exports = {
-  matchStringsWithSWord,
-  findFirstSWord,
-  findAllSWords,
-  findFilenameAndExtension,
-  findFirstSWordStringMatch,
-  findAllSWordsStringMatch,
-  countSWordsStringMatch,
-  findFilenameAndExtensionStringMatchAll,
-  findFirstSWordIndex,
-  splitOnWhitespace,
-  replaceSWords,
-  capitalizeWords,
-  replaceSWordsMatchingCase,
-  findWordsThatBeginAndEndWithSameLetter,
-  parseLogLines,
-};
