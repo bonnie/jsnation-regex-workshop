@@ -1,14 +1,19 @@
 {
-  "name": "private-udemy-js-regex-syntax",
+  "name": "jsnation-regex-workshop",
   "version": "1.0.0",
-  "description": "",
-  "main": "js_specific.js",
-  "directories": {
-    "test": "tests"
-  },
+  "description": "Code for the JSNation Live Regular Expressions workshop, June 14, 2021",
+  "directories": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node exercises/$1*.js"
   },
-  "author": "",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bonnie/private-udemy-js-regex.git"
+  },
+  "author": "Bonnie Schulkin (https://bonnie.dev)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bonnie/private-udemy-js-regex/issues"
+  },
+  "homepage": "https://github.com/bonnie/private-udemy-js-regex#readme"
 }
