@@ -15,11 +15,14 @@ assert(hasQWord("This exquisite string has no matching words.") === false);
 // Return the first full word of the input string. Could be preceded or
 // followed by a space, newline, punctuation, etc.
 const findFirstWord = (inputString) => {
-  const regex = /^\W*\w+\b/;
+  const regex = /^\W*(\w+)\b/;
   // write funtion here
 };
-assert(
+assert.strictEqual(
   findFirstWord("I, a JavaScript fan, am at the JSNation regex workshop!"),
   "I"
 );
-assert(findFirstWord("\nWhat is that newline doing there?\n"), "What");
+assert.strictEqual(
+  findFirstWord("\nWhat is that newline doing there?\n"),
+  "What"
+);

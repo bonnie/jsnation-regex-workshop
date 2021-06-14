@@ -5,8 +5,7 @@ const assert = require("assert");
 // number of space characters, using a string method.
 // Note: later we will do this same exercise using string splitting.
 const getPunchline = (joke) => {
-  const regex = /[^\?]\?\s*/;
-  // write function here
+  const regex = /[^\?]\?\s*(.+)/;
 };
 
 const joke1 =

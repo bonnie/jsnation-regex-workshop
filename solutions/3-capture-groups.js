@@ -4,6 +4,8 @@ const assert = require("assert");
 // Return true if string has the first word repeated in the string (case insensitive),
 // false otherwise
 const stringRepeatsFirstWord = (inputString) => {
+  // the \b\1\b ensures the repeat is a full word, so 'To' at the beginning
+  // *doesn't* match 'too' later in the string.
   const regex = /^(\b\w+\b).*\b\1\b/i;
   return regex.test(inputString);
 };
@@ -26,7 +28,8 @@ assert(stringRepeatsFirstWord(averageString) === false);
 
 const parseLineIntoObj = (logLine) => {
   // you will have to separate this regex into named groups!
-  const regex = /^(?<date>\d{2}[a-z]{3})(?<year>\d{4}) (?<time>\d{2}:\d{2}:\d{2}) (?<message>.+)$/;
+  const regex =
+    /^(?<date>\d{2}[a-z]{3})(?<year>\d{4}) (?<time>\d{2}:\d{2}:\d{2}) (?<message>.+)$/;
   return logLine.match(regex).groups;
 };
 

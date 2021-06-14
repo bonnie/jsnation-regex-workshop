@@ -4,10 +4,10 @@ const assert = require("assert");
 // Return true if string has the first word repeated in the string (case insensitive),
 // false otherwise
 const stringRepeatsFirstWord = (inputString) => {
-  // note, you will have to adjust this regex so that it finds strings that start
-  // and end with the same word
-  // const regexToFindFirstWord = /^(\b\w+\b)/i;
-  //
+  // note, you will have to adjust this regex so that it finds
+  // strings the first word repeated in the string
+  const regexToFindFirstWord = /^(\b\w+\b)/i;
+
   // write function here
 };
 
@@ -15,7 +15,7 @@ const stringWithBookends = "Which witch is which?";
 assert(stringRepeatsFirstWord(stringWithBookends) === true);
 
 const stringWithRepeats = "To know her is to love her";
-assert(stringRepeatsFirstWord(stringWithRepeats) === true);
+assert(stringRepeatsFirstWord(stringWithRepeats) === false);
 
 const averageString = "This is just your average string.";
 assert(stringRepeatsFirstWord(averageString) === false);

@@ -26,7 +26,7 @@ assert.strictEqual(redactEmails(emailString3), emailString3);
 // but let the spaces in the middle stand.
 const stripWhitespace = (inputString) => {
   // you'll have to add groups in the following regex to make this one work
-  const regex = /^\s*.*\s*$/;
+  const regex = /^\s*.*\S\s*$/;
 
   // write function here
 };
