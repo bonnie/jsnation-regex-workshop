@@ -158,7 +158,7 @@ assert(findFirstSWordIndex("They sell seashells by the seashore.") === 5);
 assert(findFirstSWordIndex("I do not like cute animals.") === -1);
 
 /********************************************************************************/
-// LECTURE EXAMPLE 16: String.prototpye.match referencing group within regex
+// LECTURE EXAMPLE 10: String.prototpye.match referencing group within regex
 // Find words that start and end with the same letter, case insensitive
 
 const findBookendWords = function (string) {
@@ -199,7 +199,8 @@ assert.deepStrictEqual(findBookendWords("This is a boring sentence."), null);
 
 const parseLogLines = function (logString) {
   // a named capture group is represented by (?<name>regex)
-  const logLineNamedGroupRegex = /^(?<ip>(?:\d\d?\d?\.){3}\d\d?\d?) - [\w-]+ \[(?<day>\d\d?)\/(?<month>\w{3})\/(?<year>\d{4}):(?<time>\d\d:\d\d:\d\d) (?<tzoffset>\+\d{4})] "(?<method>[A-Z]{3,4}) (?<endpoint>[\S]+) (?<protocol>[A-Z\/\d\.]{3,})" (?<statusCode>\d{3})/gm;
+  const logLineNamedGroupRegex =
+    /^(?<ip>(?:\d\d?\d?\.){3}\d\d?\d?) - [\w-]+ \[(?<day>\d\d?)\/(?<month>\w{3})\/(?<year>\d{4}):(?<time>\d\d:\d\d:\d\d) (?<tzoffset>\+\d{4})] "(?<method>[A-Z]{3,4}) (?<endpoint>[\S]+) (?<protocol>[A-Z\/\d\.]{3,})" (?<statusCode>\d{3})/gm;
   const matches = [...logString.matchAll(logLineNamedGroupRegex)];
   return matches.map((match) => match.groups);
 };
@@ -220,7 +221,7 @@ const expectedMatch = {
   statusCode: "200",
 };
 // using deepEqual instead of deepStrictEqual because the regex match.groups has a null prototype
-assert.deepEqual(parsedLines[0], expectedMatch);
+assert.deepStrictEqual(parsedLines[0], expectedMatch);
 
 /********************************************************************************/
 // LECTURE EXAMPLE 12: String.prototype.split
@@ -239,7 +240,26 @@ assert.deepStrictEqual(splitOnWhitespace("a b   c\t de"), [
 assert.deepStrictEqual(splitOnWhitespace("no_whitespace"), ["no_whitespace"]);
 
 /********************************************************************************/
-// LECTURE EXAMPLE 13: Shortcut for groups on string.Prototype.replace
+// LECTURE EXAMPLE 13: String.prototype.replace
+// Replace all words starting with s with the string "s-word"
+// NOTE: string.prototype.replace supported in Node 12.0.0+
+
+const replaceSWords = function (string) {
+  return string.replace(/\bs\w+\b/gi, "s-word");
+};
+
+/******** TESTS ********/
+assert.strictEqual(
+  replaceSWords("She sells seashells by the seashore"),
+  "s-word s-word s-word by the s-word"
+);
+assert.strictEqual(
+  replaceSWords("No words with that letter here!"),
+  "No words with that letter here!"
+);
+
+/********************************************************************************/
+// LECTURE EXAMPLE 14: Shortcut for groups on string.Prototype.replace
 // Remove pairs of single or double quotes at the beginning/end of the input string
 
 const quotesRegex = /(['"])(.*)\1/;
@@ -265,25 +285,6 @@ assert.strictEqual(
 );
 
 /********************************************************************************/
-// LECTURE EXAMPLE 14: String.prototype.replace
-// Replace all words starting with s with the string "s-word"
-// NOTE: string.prototype.replace supported in Node 12.0.0+
-
-const replaceSWords = function (string) {
-  return string.replace(/\bs\w+\b/gi, "s-word");
-};
-
-/******** TESTS ********/
-assert.strictEqual(
-  replaceSWords("She sells seashells by the seashore"),
-  "s-word s-word s-word by the s-word"
-);
-assert.strictEqual(
-  replaceSWords("No words with that letter here!"),
-  "No words with that letter here!"
-);
-
-/********************************************************************************/
 // LECTURE EXAMPLE 15: String.prototype.replace referencing group within replacement
 // Replace words starting with s or S with s-word or S-word respectively
 // NOTE: string.prototype.replace supported in Node 12.0.0+
@@ -305,7 +306,7 @@ assert.strictEqual(
 );
 
 /********************************************************************************/
-// LECTURE EXAMPLE x: Create RegExp from variable
+// LECTURE EXAMPLE 16: Create RegExp from variable
 // Create RegExp to capture root filename and extension for files with certain extensions
 
 // extensions will be an array of strings, assuming file has one extension per line
@@ -326,7 +327,7 @@ expected = /(.*)\.(gif|jpg|jpeg|png|pdf)$/gm;
 assert.deepStrictEqual(regexFromVariable, expected);
 
 /********************************************************************************/
-// LECTURE EXAMPLE x: RegExp properties
+// LECTURE EXAMPLE 17: RegExp properties
 // Add the 'g' flag to an existing regular expression is it's not already there
 
 const addGlobalToRegex = function (regularExpression) {
