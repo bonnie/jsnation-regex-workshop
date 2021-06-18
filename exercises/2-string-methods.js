@@ -6,6 +6,7 @@ const assert = require("assert");
 // Note: later we will do this same exercise using string splitting.
 const getPunchline = (joke) => {
   const regex = /[^\?]\?\s*(.+)/;
+  // write function here
 };
 
 const joke1 =
