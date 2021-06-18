@@ -4,7 +4,7 @@
   "description": "Code for the JSNation Live Regular Expressions workshop, June 14, 2021",
   "directories": {},
   "scripts": {
-    "test": "node exercises/$1*.js"
+    "test": "node exercises/$npm_config_file*.js"
   },
   "repository": {
     "type": "git",

@@ -16,7 +16,7 @@ assert(hasQWord("This exquisite string has no matching words.") === false);
 // followed by a space, newline, punctuation, etc.
 const findFirstWord = (inputString) => {
   const regex = /^\W*(\w+)\b/;
-  // write funtion here
+  // write function here
 };
 assert.strictEqual(
   findFirstWord("I, a JavaScript fan, am at the JSNation regex workshop!"),
